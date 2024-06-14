@@ -4,7 +4,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ public class JwtUtil {
         // 指定签名的时候使用的签名算法，也就是header那部分
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
+        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         // 生成JWT的时间
         long expMillis = System.currentTimeMillis() + ttlMillis;
         Date exp = new Date(expMillis);
@@ -56,3 +60,17 @@ public class JwtUtil {
     }
 
 }
+
+//为了获取生成的密钥值并将其持久化，可以将密钥转换为字符串并保存到您的配置文件或环境变量中，然后在需要时加载该密钥。以下是如何做到这一点的示例：
+//生成密钥并转换为字符串：
+//java
+//        复制代码
+//import io.jsonwebtoken.security.Keys;
+//import io.jsonwebtoken.SignatureAlgorithm;
+//import java.security.Key;
+//import java.util.Base64;
+//  生成HS256需要的密钥并且打印出来，解决提示的密钥长度不够的问题
+//Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // 生成一个安全的密钥
+//String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded()); // 将密钥编码为Base64字符串
+//
+//System.out.println("Base64 Encoded Key: " + encodedKey); // 输出密钥值，您可以将其保存到配
